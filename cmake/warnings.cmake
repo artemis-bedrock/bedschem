@@ -1,0 +1,15 @@
+function(bedschem_enable_warnings target)
+	if(MSVC)
+		target_compile_options(${target} PRIVATE /W4)
+	else()
+		target_compile_options(${target} PRIVATE -Wall -Wextra -Wpedantic)
+	endif()
+
+	if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+		target_compile_options(${target} PRIVATE -Wshadow -Wconversion -Wsign-conversion -Wold-style-cast -Wimplicit-fallthrough)
+	endif()
+
+	if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+		target_compile_options(${target} PRIVATE -Wno-missing-designated-field-initializers)
+	endif()
+endfunction()
