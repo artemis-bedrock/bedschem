@@ -15,7 +15,8 @@ namespace bedschem {
 	enum class Format : uint8_t {
 		McStructure,
 		Litematic,
-		Sponge
+		Sponge,
+		JavaStructure
 	};
 
 	struct FormatInfo {

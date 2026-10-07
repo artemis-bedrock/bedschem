@@ -49,21 +49,6 @@ namespace bedschem::codecs::litematic {
 		return std::max(kMinimumBits, std::bit_width(largest));
 	}
 
-	[[nodiscard]] static java::Conversion convertEntry(const nbt::Compound& entry) {
-		const auto* name = entry.get<std::string>("Name");
-		const auto* properties = entry.get<nbt::Compound>("Properties");
-		std::vector<java::Property> converted;
-		if (properties) {
-			for (const auto& [key, tag] : *properties) {
-				if (const auto* value = tag.get<std::string>()) {
-					converted.push_back({ .name = key, .value = *value });
-				}
-			}
-		}
-
-		return java::convert(name ? *name : std::string_view{ "minecraft:air" }, converted);
-	}
-
 	[[nodiscard]] static std::expected<Region, Error> readRegion(const std::string& name, const nbt::Compound& region, std::vector<BlockState>& palette) {
 		const auto position = readVector(region, "Position");
 		const auto size = readVector(region, "Size");
@@ -97,7 +82,7 @@ namespace bedschem::codecs::litematic {
 				return failure(ErrorCode::InvalidField, "Regions." + name + ".BlockStatePalette");
 			}
 
-			result.palette.push_back(java::addToPalette(palette, convertEntry(*entry)));
+			result.palette.push_back(java::addToPalette(palette, java::convert(*entry)));
 		}
 
 		if (const auto requiredLongs = (volume * result.bits + kLongBits - 1) / kLongBits; static_cast<int64_t>(states->size()) < requiredLongs) {

@@ -22,6 +22,7 @@ const auto out = bedschem::write(rotated, bedschem::Format::McStructure);
 | `Format::McStructure` | `.mcstructure` | yes | yes |
 | `Format::Litematic` | `.litematic` | yes | |
 | `Format::Sponge` (versions 1 to 3) | `.schem` | yes | |
+| `Format::JavaStructure` | `.nbt` | yes | |
 
 Java schematics are converted to Bedrock block states while they are read. 
 

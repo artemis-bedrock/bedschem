@@ -233,6 +233,21 @@ namespace bedschem::java {
 		return convert(name, properties);
 	}
 
+	Conversion convert(const nbt::Compound& entry) {
+		const auto* name = entry.get<std::string>("Name");
+		const auto* properties = entry.get<nbt::Compound>("Properties");
+		std::vector<Property> converted;
+		if (properties) {
+			for (const auto& [key, tag] : *properties) {
+				if (const auto* value = tag.get<std::string>()) {
+					converted.push_back({ .name = key, .value = *value });
+				}
+			}
+		}
+
+		return convert(name ? std::string_view{ *name } : std::string_view{ "minecraft:air" }, converted);
+	}
+
 	[[nodiscard]] static int32_t paletteIndex(std::vector<BlockState>& palette, const BlockState& state) {
 		const auto found = std::ranges::find(palette, state);
 		if (found != palette.end()) {

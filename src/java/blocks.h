@@ -25,6 +25,7 @@ namespace bedschem::java {
 
 	[[nodiscard]] Conversion convert(std::string_view name, std::span<const Property> properties);
 	[[nodiscard]] Conversion convert(std::string_view blockState);
+	[[nodiscard]] Conversion convert(const nbt::Compound& entry);
 	[[nodiscard]] PaletteEntry addToPalette(std::vector<BlockState>& palette, const Conversion& conversion);
 	void place(Schematic& schematic, BlockPos position, PaletteEntry entry);
 }

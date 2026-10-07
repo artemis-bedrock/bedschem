@@ -5,6 +5,7 @@
 #include "codecs/litematic.h"
 #include "codecs/mcstructure.h"
 #include "codecs/sponge.h"
+#include "codecs/structure.h"
 #include "gzip.h"
 
 #include <algorithm>
@@ -40,6 +41,12 @@ namespace bedschem {
 			.endian = nbt::Endian::Big,
 			.matches = &codecs::sponge::matches,
 			.read = &codecs::sponge::read
+		},
+		Codec{
+			.info = { .format = Format::JavaStructure, .name = "Java structure", .extension = ".nbt" },
+			.endian = nbt::Endian::Big,
+			.matches = &codecs::structure::matches,
+			.read = &codecs::structure::read
 		}
 	};
 
