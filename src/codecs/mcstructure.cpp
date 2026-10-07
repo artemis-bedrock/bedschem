@@ -1,6 +1,6 @@
-#include "bedschem/mcstructure.h"
+#include "codecs/mcstructure.h"
 
-#include "bedschem/nbt/io.h"
+#include "failure.h"
 
 #include <algorithm>
 #include <array>
@@ -9,12 +9,8 @@
 #include <optional>
 #include <string>
 
-namespace bedschem {
+namespace bedschem::codecs::mcstructure {
 	static constexpr int32_t kFormatVersion = 1;
-
-	[[nodiscard]] static std::unexpected<Error> failure(const ErrorCode code, std::string context) {
-		return std::unexpected(Error{ .code = code, .context = std::move(context) });
-	}
 
 	[[nodiscard]] static std::optional<BlockPos> readPosition(const nbt::Compound& compound, const std::string_view name) {
 		const auto* list = compound.get<nbt::List>(name);
@@ -153,7 +149,11 @@ namespace bedschem {
 		return entities;
 	}
 
-	[[nodiscard]] static std::expected<Schematic, Error> readStructure(const nbt::Compound& root) {
+	bool matches(const nbt::Compound& root) {
+		return root.contains("structure") && root.contains("size");
+	}
+
+	std::expected<Schematic, Error> read(const nbt::Compound& root) {
 		const auto size = readPosition(root, "size");
 		if (!size) {
 			return failure(ErrorCode::MissingField, "size");
@@ -277,21 +277,12 @@ namespace bedschem {
 		return structure;
 	}
 
-	std::expected<Schematic, Error> readMcStructure(const std::span<const std::byte> data) {
-		const auto root = nbt::read(data, nbt::Endian::Little);
-		if (!root) {
-			return std::unexpected(root.error());
-		}
-
-		return readStructure(root->compound);
-	}
-
-	std::vector<std::byte> writeMcStructure(const Schematic& schematic) {
+	nbt::Compound write(const Schematic& schematic) {
 		nbt::Compound root;
 		root.set("format_version", kFormatVersion);
 		root.set("size", positionList(schematic.size));
 		root.set("structure", structureCompound(schematic));
 		root.set("structure_world_origin", positionList(schematic.origin));
-		return nbt::write(root, nbt::Endian::Little);
+		return root;
 	}
 }

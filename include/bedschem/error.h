@@ -11,7 +11,10 @@ namespace bedschem {
 		DepthExceeded,
 		RootNotCompound,
 		MissingField,
-		InvalidField
+		InvalidField,
+		InvalidCompression,
+		UnsupportedVersion,
+		UnsupportedFormat
 	};
 
 	struct Error {
