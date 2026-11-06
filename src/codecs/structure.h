@@ -1,9 +1,9 @@
 #pragma once
 
 #include "bedschem/error.h"
-#include "bedschem/nbt/tag.h"
 #include "bedschem/schematic.h"
 
+#include <nbt.h>
 #include <expected>
 
 namespace bedschem::codecs::structure {

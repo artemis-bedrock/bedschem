@@ -1,6 +1,5 @@
 #include "bedschem/format.h"
 
-#include "bedschem/nbt/io.h"
 #include "failure.h"
 #include "codecs/litematic.h"
 #include "codecs/mcstructure.h"
@@ -8,6 +7,7 @@
 #include "codecs/structure.h"
 #include "gzip.h"
 
+#include <nbt.h>
 #include <algorithm>
 #include <array>
 #include <cctype>
@@ -98,7 +98,7 @@ namespace bedschem {
 			return std::unexpected(decompressed.error());
 		}
 
-		std::array<std::optional<std::expected<nbt::NamedCompound, Error>>, 2> roots;
+		std::array<std::optional<std::expected<nbt::NamedCompound, nbt::Error>>, 2> roots;
 		for (const auto& codec : kCodecs) {
 			auto& root = roots[static_cast<std::size_t>(codec.endian)];
 			if (!root) {
@@ -122,7 +122,7 @@ namespace bedschem {
 		const auto& codec = codecFor(format);
 		const auto root = nbt::read(*decompressed, codec.endian);
 		if (!root) {
-			return std::unexpected(root.error());
+			return std::unexpected(nbtError(root.error()));
 		}
 
 		if (!codec.matches(root->compound)) {

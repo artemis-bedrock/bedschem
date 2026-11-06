@@ -1,7 +1,6 @@
 #pragma once
 
-#include "bedschem/nbt/tag.h"
-
+#include <nbt.h>
 #include <array>
 #include <cstdint>
 #include <string>

@@ -1,9 +1,9 @@
 #include "java/blocks.h"
 
-#include "bedschem/nbt/io.h"
 #include "gzip.h"
 #include "java/block_data.h"
 
+#include <nbt.h>
 #include <algorithm>
 #include <cstddef>
 #include <functional>

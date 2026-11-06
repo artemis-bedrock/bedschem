@@ -17,6 +17,13 @@ CPMAddPackage(
 		"LIBDEFLATE_INSTALL OFF"
 )
 
+CPMAddPackage(
+	NAME nbt
+	GITHUB_REPOSITORY artemis-bedrock/nbt
+	GIT_TAG main
+	OPTIONS "NBT_BUILD_TESTS OFF"
+)
+
 file(GLOB_RECURSE bedschem_sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB_RECURSE bedschem_headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
 
@@ -29,7 +36,10 @@ target_sources(bedschem
 )
 
 target_include_directories(bedschem PRIVATE src)
-target_link_libraries(bedschem PRIVATE libdeflate::libdeflate_static)
+target_link_libraries(bedschem
+	PUBLIC nbt::nbt
+	PRIVATE libdeflate::libdeflate_static
+)
 target_compile_features(bedschem PUBLIC cxx_std_23)
 bedschem_enable_warnings(bedschem)
 
